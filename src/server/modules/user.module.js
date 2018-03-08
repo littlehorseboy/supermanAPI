@@ -62,7 +62,7 @@ const modifyUser = (insertValues, userId) => {
       if (connectionError) {
         reject(connectionError);
       } else {
-        connection.query('UPDATE user SET ? WHERE user_id= ? ', [insertValues, userId], (error, result) => {
+        connection.query('UPDATE user SET ? WHERE id= ? ', [insertValues, userId], (error, result) => {
           if (error) {
             console.log('SQL error: ', error);
             reject(error);
@@ -87,7 +87,7 @@ const deleteUser = (userId) => {
       if (connectionError) {
         reject(connectionError);
       } else {
-        connection.query('DELETE FROM user WHERE user_id = ?', userId, (error, result) => {
+        connection.query('DELETE FROM user WHERE id = ?', userId, (error, result) => {
           if (error) {
             console.log('SQL error: ', error);
             reject(error);
@@ -110,22 +110,23 @@ const selectUserLogin = (insertValues) => {
       if (connectionError) {
         reject(connectionError);
       } else {
-        connection.query('SELECT * FROM user WHERE user_mail = ?', insertValues.user_mail, (error, result) => {
+        console.log(insertValues.email);
+        connection.query('SELECT * FROM user WHERE email = ?', insertValues.email, (error, result) => {
           if (error) {
             console.log('SQL error: ', error);
             reject(error);
           } else if (Object.keys(result).length === 0) {
             reject(new APPError.LoginError1()); // 信箱尚未註冊
           } else {
-            const dbHashPassword = result[0].user_password; // 資料庫加密後的密碼
-            const userPassword = insertValues.user_password; // 使用者登入時輸入的密碼
+            const dbHashPassword = result[0].password; // 資料庫加密後的密碼
+            const userPassword = insertValues.password; // 使用者登入時輸入的密碼
             bcrypt.compare(userPassword, dbHashPassword).then((res) => { // 解密驗證
               if (res) {
                 // 產生JWT
                 const payload = {
-                  user_id: result[0].user_id,
-                  user_name: result[0].user_name,
-                  user_mail: result[0].user_mail
+                  user_id: result[0].id,
+                  username: result[0].username,
+                  email: result[0].email
                 };
                 // 取得 API Token
                 const token = jwt.sign({

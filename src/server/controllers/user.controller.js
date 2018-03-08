@@ -15,9 +15,9 @@ const userGet = (req, res) => {
 const userPost = (req, res) => {
   // 取得新增參數
   const insertValues = {
-    user_name: req.body.user_name,
-    user_mail: req.body.user_mail,
-    user_password: bcrypt.hashSync(req.body.user_password, 10) // 密碼加密
+    username: req.body.username,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 10) // 密碼加密
   };
   userModule.createUser(insertValues).then((result) => {
     res.send(result);
@@ -31,7 +31,11 @@ const userPut = (req, res) => {
   // 取得修改id
   const userId = req.params.user_id;
   // 取得新增參數
-  const insertValues = req.body;
+  const insertValues = {
+    username: req.body.username,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 10) // 密碼加密
+  };
   userModule.modifyUser(insertValues, userId).then((result) => {
     res.send(result);
   }).catch((err) => {

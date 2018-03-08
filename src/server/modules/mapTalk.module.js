@@ -12,7 +12,7 @@ const connectionPool = mysql.createPool({
 });
 
 /** mapTalk GET 取得 */
-const selectmapTalk = () => {
+const dataSelect = () => {
   return new Promise((resolve, reject) => {
     connectionPool.getConnection((connectionError, connection) => {
       if (connectionError) {
@@ -33,7 +33,7 @@ const selectmapTalk = () => {
 };
 
 /** mapTalk POST 新增 */
-const createmapTalk = (insertValues) => {
+const dataCreate = (insertValues) => {
   return new Promise((resolve, reject) => {
     connectionPool.getConnection((connectionError, connection) => {
       if (connectionError) {
@@ -54,7 +54,7 @@ const createmapTalk = (insertValues) => {
 };
 
 /** mapTalk PUT 修改 */
-const modifymapTalk = (insertValues, userId) => {
+const dataModify = (insertValues, userId) => {
   return new Promise((resolve, reject) => {
     connectionPool.getConnection((connectionError, connection) => {
       if (connectionError) {
@@ -79,7 +79,7 @@ const modifymapTalk = (insertValues, userId) => {
 };
 
 /** mapTalk DELETE 新增 */
-const deletemapTalk = (userId) => {
+const dataDelete = (userId) => {
   return new Promise((resolve, reject) => {
     connectionPool.getConnection((connectionError, connection) => {
       if (connectionError) {
@@ -102,7 +102,7 @@ const deletemapTalk = (userId) => {
 };
 
 /** mapTalk GET JWT取得個人文章 */
-const selectPersonalmapTalk = (token) => {
+const dataSelectPersonal = (token) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, 'my_secret_key', (err, decoded) => {
       if (err) {
@@ -131,9 +131,9 @@ const selectPersonalmapTalk = (token) => {
 };
 
 export default {
-  selectmapTalk,
-  createmapTalk,
-  modifymapTalk,
-  deletemapTalk,
-  selectPersonalmapTalk
+  dataSelect,
+  dataCreate,
+  dataModify,
+  dataDelete,
+  dataSelectPersonal
 };

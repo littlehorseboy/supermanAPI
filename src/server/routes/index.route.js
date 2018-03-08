@@ -2,8 +2,7 @@ import express from 'express';
 import mysql from 'mysql';
 
 import config from '../../config/config';
-import article from './article.route';
-import mapTalk from './mapTalk.route';
+import mapTalk from './maptalk.route';
 import user from './user.route';
 
 const router = express.Router();
@@ -33,9 +32,6 @@ router.get('/sqlTest', (req, res) => {
     }
   });
 });
-
-/** Article Router */
-router.use('/article', article);
 
 /** mapTalk Router */
 router.use('/mapTalk', mapTalk);
