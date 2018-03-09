@@ -16,4 +16,8 @@ router.route('/:user_id')
 
 router.route('/login').post(userCtrl.userLogin); /** User 登入 */
 
+router.route('/FBId').post(userCtrl.FBIdPost); /** User 登入 */
+
+router.route('/FBlogin').post(userCtrl.FBLogin); /** User 登入 */
+
 export default router;

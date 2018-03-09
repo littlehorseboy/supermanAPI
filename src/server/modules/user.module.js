@@ -110,7 +110,6 @@ const selectUserLogin = (insertValues) => {
       if (connectionError) {
         reject(connectionError);
       } else {
-        console.log(insertValues.email);
         connection.query('SELECT * FROM user WHERE email = ?', insertValues.email, (error, result) => {
           if (error) {
             console.log('SQL error: ', error);
@@ -146,10 +145,77 @@ const selectUserLogin = (insertValues) => {
   });
 };
 
+/** User POST 新增 */
+const FBcreateId = (insertValues) => {
+  return new Promise((resolve, reject) => {
+    connectionPool.getConnection((connectionError, connection) => {
+      if (connectionError) {
+        reject(connectionError);
+      } else {
+        connection.query('INSERT INTO fbid SET ?', insertValues, (error, result) => {
+          if (error) {
+            console.log('SQL error: ', error);
+            reject(error);
+          } else if (result.affectedRows === 1) {
+            resolve(`新增成功! user_id: ${result.insertId}`);
+          }
+          connection.release();
+        });
+      }
+    });
+  });
+};
+
+/** User GET (Login)登入取得資訊 */
+const FBLogin = (insertValues) => {
+  return new Promise((resolve, reject) => {
+    connectionPool.getConnection((connectionError, connection) => {
+      if (connectionError) {
+        reject(connectionError);
+      } else {
+        connection.query(`SELECT * FROM fbid
+        WHERE id = ?
+        AND email = ?
+        ORDER BY createTime DESC LIMIT 1`, [insertValues.id, insertValues.email], (error, result) => {
+          if (error) {
+            console.log('SQL error: ', error);
+            reject(error);
+          } else if (Object.keys(result).length === 0) {
+            reject(new APPError.LoginError1()); // 信箱尚未註冊
+          } else {
+            // const dbHashPassword = result[0].password; // 資料庫加密後的密碼
+            // const userPassword = insertValues.password; // 使用者登入時輸入的密碼
+            // bcrypt.compare(userPassword, dbHashPassword).then((res) => { // 解密驗證
+            // if (res) {
+            // 產生JWT
+            const payload = {
+              id: result[0].id,
+              email: result[0].email
+            };
+            // 取得 API Token
+            const token = jwt.sign({
+              payload,
+              exp: Math.floor(Date.now() / 1000) + (60 * 15)
+            }, 'my_secret_key');
+            resolve(Object.assign({ code: 200 }, { message: '登入成功', token }));
+            // } else {
+            //   reject(new APPError.LoginError2()); // 登入失敗, 輸入的密碼有誤
+            // }
+            // });
+          }
+          connection.release();
+        });
+      }
+    });
+  });
+};
+
 export default {
   selectUser,
   createUser,
   modifyUser,
   deleteUser,
-  selectUserLogin
+  selectUserLogin,
+  FBcreateId,
+  FBLogin
 };

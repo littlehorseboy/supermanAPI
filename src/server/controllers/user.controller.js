@@ -67,10 +67,39 @@ const userLogin = (req, res, next) => {
   });
 };
 
+/** User POST 新增 */
+const FBIdPost = (req, res) => {
+  // 取得新增參數
+  const insertValues = req.body;
+  userModule.FBcreateId(insertValues).then((result) => {
+    // res.send(result);
+    res.send('1');
+  }).catch((err) => {
+    // return res.send(err);
+    return res.send('0');
+  });
+};
+
+/** FB POST 登入(FB Login) */
+const FBLogin = (req, res, next) => {
+  // 取得帳密
+  const insertValues = req.body;
+  userModule.FBLogin(insertValues).then((result) => {
+    res.send(result);
+  }).catch((err) => {
+    // 在 module中 reject() 的錯誤訊息
+    // 會被 .catch 接受經由第三個參數 next 傳送來
+    res.send('0');
+    // next(err);
+  });
+};
+
 export default {
   userGet,
   userPost,
   userPut,
   userDelete,
-  userLogin
+  userLogin,
+  FBIdPost,
+  FBLogin
 };

@@ -12,12 +12,13 @@ export default {
   createmapTalk: {
     body: {
       user_id: Joi.number().required(),
-      subject: Joi.string(),
+      subject: Joi.string().max(30),
       content: Joi.string(),
       imageUrl: Joi.string(),
-      lon: Joi.string(),
-      lan: Joi.string(),
-      status: Joi.string()
+      lon: Joi.number(),
+      lan: Joi.number(),
+      status: Joi.number(),
+      category: Joi.number()
     }
   }
 };
